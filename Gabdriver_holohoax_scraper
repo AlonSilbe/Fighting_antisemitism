@@ -5,31 +5,32 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import exceptions
+import time
 import pandas as pd
 
-
-
-url2="https://trends.gab.com/search/item?q=holohoax"
+def gabDriverSearch(search_term):
+    
+    url="https://trends.gab.com/search/item?q={}".format(search_term)
 #open chrome with web driver. Driver can be downloaded at: https://chromedriver.chromium.org/downloads
-driver=webdriver.Chrome(executable_path=r"C:\Users\Alon1000\Desktop\chromedriver.exe")
+    driver=webdriver.Chrome(executable_path=r"C:\Users\Alon1000\Desktop\chromedriver.exe")
 #open site
 
-driver.get(url2)
-
-lis=list()
-num=driver.find_elements_by_xpath('/html/body/div[1]/div/div[3]/div')
-for nu in num:
-    limit=int(nu.text[:2])
-i=0
-while i<limit:
-    ka=driver.find_elements_by_xpath('/html/body/div[1]/div/ul/li[{}]/div[2]/div[1]/a'.format(i))
-    for t in ka:
-        lis.append(t.text)
-    i=i+1
-
-driver.quit() 
-print(lis)
-dict={"Content":lis}
-df = pd.DataFrame(dict)
-df.to_csv('file1.csv')
+    driver.get(url)
+    lis=list()
+    num=driver.find_elements_by_xpath('/html/body/div[1]/div/div[3]/div')
+    for nu in num:
+        limit=int(nu.text[:2])
+    i=0
+    while i<limit:
+         ka=driver.find_elements_by_xpath('/html/body/div[1]/div/ul/li[{}]/div[2]/div[1]/a'.format(i))
+         for t in ka:
+             lis.append(t.text)
+         i=i+1
+    driver.quit() 
+    print(lis)
+    dict={"Content":lis}
+    df = pd.DataFrame(dict)
+    df.to_csv('results.csv')
  
+search_term="holohoax"
+gabDriverSearch(search_term)
